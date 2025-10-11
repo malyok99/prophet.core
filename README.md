@@ -10,7 +10,7 @@ is a local, privacy-first daemon that serves as the central hub for modular pers
 Prophet.Core is designed as a modular personal assistant. The Core itself doesn't do anything - its purpose is to coordinate modules that *provide useful insights or tools for your workflow.*
 
 # Architecture
-[Prophet.Core Architecture](architecture.png)
+![Prophet.Core Architecture](architecture.png)
 
 # Build & Run
 Compile core
