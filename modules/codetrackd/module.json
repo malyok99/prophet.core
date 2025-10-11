@@ -1,0 +1,6 @@
+{
+  "name": "codetrackd",
+  "description": "Tracks how much time you actually code",
+  "requires": ["is_app_open"],
+  "additional": ["nvim", "vim"]
+}
