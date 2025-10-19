@@ -1,6 +1,0 @@
-{
-  "name": "pomodoro",
-  "description": "Reminds taking breaks",
-  "requires": ["is_app_open"],
-  "additional": ["nvim", "vim"]
-}
