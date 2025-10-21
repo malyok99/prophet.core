@@ -3,11 +3,11 @@
 
 extern "C" {
 
-// called when module is loaded
-void module_init();
+// called when module is loaded, receives its own module.json as JSON string
+void module_init(const char* module_config_json);
 
 // called when module should start doing its work
-// dependency_data_json contains data from core, e.g. {"is_app_open": {"nvim": true}}
+// dependency_data_json contains only dependencies declared in module.json
 void module_run(const char* dependency_data_json);
 
 // called when module should stop

@@ -6,8 +6,8 @@ set(CMAKE_CXX_STANDARD 20)
 find_package(Qt6 COMPONENTS Widgets REQUIRED)
 
 set(HEADERS
-  MainWindow.h
-  ModuleDelegate.h
+  MainWindow.hpp
+  ModuleDelegate.hpp
 )
 
 set(SOURCES

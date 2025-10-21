@@ -1,4 +1,4 @@
-#include "ModuleDelegate.h"
+#include "ModuleDelegate.hpp"
 #include <QPainter>
 #include <QTextDocument>
 #include <QJsonArray>

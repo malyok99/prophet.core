@@ -1,6 +1,6 @@
 {
   "name": "codetrackd",
   "description": "Tracks how much time you actually code",
-  "requires": ["is_app_open"],
+  "requires": ["check_if_process_running"],
   "additional": ["nvim", "vim"]
 }

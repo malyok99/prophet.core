@@ -1,5 +1,5 @@
-#include "MainWindow.h"
-#include "ModuleDelegate.h"
+#include "MainWindow.hpp"
+#include "ModuleDelegate.hpp"
 #include <QVBoxLayout>
 #include <QListWidgetItem>
 #include <QFile>
@@ -16,6 +16,34 @@
 
 static const int ModuleDataRole = Qt::UserRole + 1;
 static const int ExpansionStateRole = Qt::UserRole + 2;
+
+static const QString ModulesJsonPath = "../../modules/modules.json";
+
+// load modules.json, return empty object if missing
+QJsonObject loadModulesJson() {
+  QFile file(ModulesJsonPath);
+  QJsonObject j;
+
+  if (file.exists() && file.open(QIODevice::ReadOnly)) {
+    QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
+    j = doc.object();
+    file.close();
+  }
+
+  return j;
+}
+
+// update modules.json
+void saveModulesJson(const QJsonObject& j) {
+  QFile file(ModulesJsonPath);
+  if (file.open(QIODevice::WriteOnly)) {
+    QJsonDocument doc(j);
+    file.write(doc.toJson(QJsonDocument::Indented));
+    file.close();
+  } else {
+    qWarning() << "Failed to write modules.json";
+  }
+}
 
 void MainWindow::sendIpcCommand(const QString& cmd) {
   int sock = ::socket(AF_UNIX, SOCK_STREAM, 0);
@@ -57,6 +85,10 @@ void MainWindow::loadModules() {
     return;
   }
 
+  // load persisted module states
+  QJsonObject persisted = loadModulesJson();
+  bool updatedJson = false;
+
   moduleList->clear();
   QStringList entries = modulesDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
 
@@ -75,19 +107,34 @@ void MainWindow::loadModules() {
     QJsonObject obj = doc.object();
     QString modName = obj["name"].toString(entry);
 
+    // add new modules to persisted JSON
+    if (!persisted.contains(modName)) {
+      persisted[modName] = false; // default to disabled
+      updatedJson = true;
+    }
+
     QListWidgetItem* item = new QListWidgetItem(modName);
     item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
-    item->setCheckState(Qt::Unchecked);
+
+    bool isEnabled = persisted[modName].toBool();
+    item->setCheckState(isEnabled ? Qt::Checked : Qt::Unchecked);
     item->setData(ModuleDataRole, obj);
     item->setData(ExpansionStateRole, false);
 
     moduleList->addItem(item);
   }
+
+  if (updatedJson) saveModulesJson(persisted); // persist newly discovered modules
 }
 
 void MainWindow::moduleToggled(QListWidgetItem* item) {
   QString cmd = (item->checkState() == Qt::Checked ? "ENABLE " : "DISABLE ") + item->text();
   sendIpcCommand(cmd);
+
+  // update modules.json
+  QJsonObject persisted = loadModulesJson();
+  persisted[item->text()] = (item->checkState() == Qt::Checked);
+  saveModulesJson(persisted);
 }
 
 void MainWindow::moduleClicked(QListWidgetItem* item) {
