@@ -5,23 +5,24 @@ set(CMAKE_CXX_STANDARD 20)
 
 find_package(Qt6 COMPONENTS Widgets REQUIRED)
 
-# Add headers that use Q_OBJECT
 set(HEADERS
-    MainWindow.h
+  MainWindow.h
+  ModuleDelegate.h
 )
 
 set(SOURCES
-    main.cpp
-    MainWindow.cpp
+  main.cpp
+  MainWindow.cpp
+  ModuleDelegate.cpp
 )
 
-qt_wrap_cpp(MOC_SOURCES ${HEADERS}) # <- This line is for Qt5 style, optional in Qt6
+qt_wrap_cpp(MOC_SOURCES ${HEADERS}) 
 
 add_executable(gui
-    ${SOURCES}
-    ${MOC_SOURCES}
-    ${HEADERS}  # optional for IDE
+  ${SOURCES}
+  ${MOC_SOURCES}
+  ${HEADERS}
 )
 
 target_link_libraries(gui Qt6::Widgets)
-set_target_properties(gui PROPERTIES AUTOMOC TRUE) # <- This line is KEY
+set_target_properties(gui PROPERTIES AUTOMOC TRUE)
