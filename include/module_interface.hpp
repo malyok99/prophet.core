@@ -16,8 +16,5 @@ void module_stop();
 // called when module is unloaded
 void module_cleanup();
 
-// optional: return module name
-const char* module_name();
-
 }
 

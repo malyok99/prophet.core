@@ -12,6 +12,8 @@ static std::vector<std::string> tracked_editors;
 extern "C" {
 
   void module_init(const char* module_config_json) {
+    tracked_editors.clear();
+
     auto cfg = json::parse(module_config_json);
 
     if (cfg.contains("additional") && cfg["additional"].is_array()) {
