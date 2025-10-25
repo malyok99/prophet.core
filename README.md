@@ -8,6 +8,7 @@ is a local daemon that serves as a central hub for modules that help collect per
 # Why?
 I wanted to collect my own statistics for fun, self-review and productivity purposes, but managing multiple daemons and rewriting similar logic for each was inconvenient. I needed a single place to configure and view everything.
 
+### Architecture
 ![Prophet.Core Architecture](architecture.png)
 
 # Build & Run
