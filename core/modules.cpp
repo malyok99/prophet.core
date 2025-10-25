@@ -7,51 +7,51 @@
 std::unordered_map<std::string, Module> loaded_modules;
 
 bool load_module(const std::filesystem::path& dir_path) {
-    std::string so_path = dir_path.string() + "/" + dir_path.filename().string() + ".so";
-    std::string json_path = dir_path.string() + "/module.json";
-    if (!std::filesystem::exists(so_path) || !std::filesystem::exists(json_path)) return false;
+  std::string so_path = dir_path.string() + "/" + dir_path.filename().string() + ".so";
+  std::string json_path = dir_path.string() + "/module.json";
+  if (!std::filesystem::exists(so_path) || !std::filesystem::exists(json_path)) return false;
 
-    std::ifstream jf(json_path);
-    if (!jf.is_open()) return false;
+  std::ifstream jf(json_path);
+  if (!jf.is_open()) return false;
 
-    nlohmann::json metadata = nlohmann::json::parse(jf);
-    std::string mod_name = metadata.value("name", dir_path.filename().string()); // fallback to folder name
+  nlohmann::json metadata = nlohmann::json::parse(jf);
+  std::string mod_name = metadata.value("name", dir_path.filename().string());
 
-    if (loaded_modules.count(mod_name)) return false;
+  if (loaded_modules.count(mod_name)) return false;
 
-    void* handle = dlopen(so_path.c_str(), RTLD_NOW);
-    if (!handle) { std::cerr << "Failed to load " << so_path << ": " << dlerror() << "\n"; return false; }
+  void* handle = dlopen(so_path.c_str(), RTLD_NOW);
+  if (!handle) { std::cerr << "Failed to load " << so_path << ": " << dlerror() << "\n"; return false; }
 
-    Module m{};
-    m.handle = handle;
-    m.init = (void(*)(const char*))dlsym(handle, "module_init");
-    m.run  = (void(*)(const char*))dlsym(handle, "module_run");
-    m.stop = (void(*)())dlsym(handle, "module_stop");
-    m.cleanup = (void(*)())dlsym(handle, "module_cleanup");
+  Module m{};
+  m.handle = handle;
+  m.init = (void(*)(const char*))dlsym(handle, "module_init");
+  m.run  = (void(*)(const char*))dlsym(handle, "module_run");
+  m.stop = (void(*)())dlsym(handle, "module_stop");
+  m.cleanup = (void(*)())dlsym(handle, "module_cleanup");
 
-    if (!m.init || !m.run || !m.stop || !m.cleanup) {
-        std::cerr << "Invalid interface: " << so_path << "\n";
-        dlclose(handle);
-        return false;
-    }
+  if (!m.init || !m.run || !m.stop || !m.cleanup) {
+    std::cerr << "Invalid interface: " << so_path << "\n";
+    dlclose(handle);
+    return false;
+  }
 
-    m.metadata = metadata;
-    m.path = dir_path;
+  m.metadata = metadata;
+  m.path = dir_path;
 
-    m.init(m.metadata.dump().c_str());
-    loaded_modules[mod_name] = m;
-    std::cout << "[prophet] Loaded module: " << mod_name << "\n"; // print from JSON
-    return true;
+  m.init(m.metadata.dump().c_str());
+  loaded_modules[mod_name] = m;
+  std::cout << "[prophet] Loaded module: " << mod_name << "\n";
+  return true;
 }
 
 void unload_module(const std::string& mod_name) {
-    if (!loaded_modules.count(mod_name)) return;
-    Module& m = loaded_modules[mod_name];
-    m.stop();
-    m.cleanup();
-    dlclose(m.handle);
-    loaded_modules.erase(mod_name);
-    std::cout << "[prophet] Unloaded module: " << mod_name << "\n"; // print from JSON
+  if (!loaded_modules.count(mod_name)) return;
+  Module& m = loaded_modules[mod_name];
+  m.stop();
+  m.cleanup();
+  dlclose(m.handle);
+  loaded_modules.erase(mod_name);
+  std::cout << "[prophet] Unloaded module: " << mod_name << "\n";
 }
 
 

@@ -8,12 +8,14 @@ find_package(Qt6 COMPONENTS Widgets REQUIRED)
 set(HEADERS
   MainWindow.hpp
   ModuleDelegate.hpp
+  ModuleDataViewer.hpp
 )
 
 set(SOURCES
   main.cpp
   MainWindow.cpp
   ModuleDelegate.cpp
+  ModuleDataViewer.cpp
 )
 
 qt_wrap_cpp(MOC_SOURCES ${HEADERS}) 

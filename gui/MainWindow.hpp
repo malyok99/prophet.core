@@ -2,20 +2,25 @@
 
 #include <QMainWindow>
 #include <QListWidget>
+#include <QModelIndex>
+#include <QJsonObject>
 
 class MainWindow : public QMainWindow {
   Q_OBJECT
 
-  public:
-    explicit MainWindow(QWidget *parent = nullptr);
+public:
+  explicit MainWindow(QWidget *parent = nullptr);
 
-    private slots:
-      void moduleToggled(QListWidgetItem* item);
-    void moduleClicked(QListWidgetItem* item);
+private slots:
+  void moduleToggled(QListWidgetItem* item);
+  void editModule(const QModelIndex& index);
 
-  private:
-    void loadModules();
-    void sendIpcCommand(const QString& cmd);
+protected:
+  bool eventFilter(QObject* obj, QEvent* event) override;
 
-    QListWidget* moduleList;
+private:
+  void loadModules();
+  void sendIpcCommand(const QString& cmd);
+
+  QListWidget* moduleList;
 };

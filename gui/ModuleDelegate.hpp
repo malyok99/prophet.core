@@ -15,4 +15,13 @@ class ModuleDelegate : public QStyledItemDelegate {
 
     QSize sizeHint(const QStyleOptionViewItem &option,
         const QModelIndex &index) const override;
+
+    bool editorEvent(QEvent *event,
+        QAbstractItemModel *model,
+        const QStyleOptionViewItem &option,
+        const QModelIndex &index) override;
+
+signals:
+    void editRequested(const QModelIndex &index) const;
+    void viewRequested(const QModelIndex &index) const;
 };

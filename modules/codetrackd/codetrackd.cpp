@@ -7,7 +7,7 @@ using json = nlohmann::json;
 
 static std::chrono::steady_clock::time_point start_time;
 static bool tracking = false;
-static std::vector<std::string> tracked_editors;
+std::vector<std::string> tracked_editors;
 
 extern "C" {
 

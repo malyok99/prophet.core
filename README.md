@@ -8,13 +8,23 @@ is a local daemon that serves as a central hub for modules that help collect per
 # Why?
 I wanted to collect my own statistics for fun, self-review and productivity purposes, but managing multiple daemons and rewriting similar logic for each was inconvenient. I needed a single place to configure and view everything.
 
+![Prophet.Core Architecture](architecture.png)
+
 # Build & Run
+### Compile module
+Navigate to its folder first (`modules/module_name`) and run the following universal command:
+`find . -name "*.cpp" -exec g++ -fPIC -shared -I../../include -o '{}.so' '{}' \;`
+
 Compile core
-`g++ main.cpp -I../include -ldl -pthread -o ../build/prophet`
+```bash
+mkdir build
+cd build
+cmake ..
+make```
 
-Compile module (codetrackd)
-`g++ -fPIC -shared codetrackd.cpp -I../../include -o codetrackd.so`
-
-Run
-`cd build && ./prophet`
-
+Compile gui
+```bash
+mkdir gui/build
+cd gui/build
+cmake ..
+make```
