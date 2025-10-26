@@ -14,18 +14,22 @@ I wanted to collect my own statistics for fun, self-review and productivity purp
 # Build & Run
 ### Compile module
 Navigate to its folder first (`modules/module_name`) and run the following universal command:
-`find . -name "*.cpp" -exec g++ -fPIC -shared -I../../include -o '{}.so' '{}' \;`
+```bash 
+find . -name "*.cpp" -exec bash -c 'f="{}"; g++ -fPIC -shared -I../../include -o "${f%.cpp}.so" "$f"' \;
+```
 
-Compile core
+### Compile core
 ```bash
 mkdir build
 cd build
 cmake ..
-make```
+make
+```
 
-Compile gui
+### Compile gui
 ```bash
 mkdir gui/build
 cd gui/build
 cmake ..
-make```
+make
+```
