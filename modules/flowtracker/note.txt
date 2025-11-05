@@ -1,0 +1,1 @@
+g++ -fPIC -shared flowtracker.cpp -o flowtracker.so -I../../include -std=c++17 -pthread -lX11 -lXss

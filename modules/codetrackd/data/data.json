@@ -1,8 +1,0 @@
-{ 
-  "module": "codetrackd", 
-  "data_type": "time_spent", 
-  "records": [ 
-    { "date": "2025-10-23", "hours": 4 , "minutes": 20}, 
-    { "date": "2025-10-24", "hours": 6 , "minutes": 9}
-  ] 
-}

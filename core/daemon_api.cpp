@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <fstream>
 #include <string>
+#include <algorithm>
 
 namespace fs = std::filesystem;
 

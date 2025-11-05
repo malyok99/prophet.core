@@ -1,0 +1,7 @@
+{
+    "description": "Tracks active apps and summarizes usage per category (Coding, Browsing, Chat, Media, Misc)",
+    "name": "flowtracker",
+    "requires": [
+        "active_window_name"
+    ]
+}
